@@ -10,8 +10,7 @@ router.get('/', (req, res) => {
 })
 
 module.exports = app => {
-    app.use(
-        bodyParser.json(),
-        router
-    )
+    app.use(bodyParser.json())
+
+    app.use('/api/project', router)
 }
