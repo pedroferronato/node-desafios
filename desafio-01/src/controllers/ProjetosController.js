@@ -4,24 +4,18 @@ class ProjetosController {
     static async insertProjeto(req, res) {
         const projetoRecebido = req.body
         try {
-            const projetoRegistrado = await database.Projetos.create(projetoRecebido)
-
-            const tasks = projetoRecebido.tasks
-            
-            for (let i = 0; i < tasks.length; i++) {
-                const task = tasks[i];
-                task.projeto_id = projetoRegistrado.id
-                await database.Tasks.create(task)
+            if (!projetoRecebido.tasks) {
+                return res.status(400).json({
+                    erro: 'Campo \'tasks\' deve receber um valor',
+                    mensagem: "Verifique o preenchimento dos campos obrigatórios"
+                })
             }
+            const projetoRegistrado = await database.Projetos.create(
+                projetoRecebido, 
+                { include: [{ association: 'tasks' }] }
+            ) // Realiza o registro de um novo projeto com suas tasks
 
-            const projeto = await database.Projetos.findByPk(projetoRegistrado.id, {
-                include: { 
-                    association: 'tasks',
-                    attributes: ['title', 'taskRelevance', 'completed', 'createdAt', 'updatedAt']
-                }
-            })
-            
-            return res.status(201).json(projeto)
+            return res.status(201).json(projetoRegistrado)
         } catch (error) {
             if (error.parent) {
                 if (error.parent.errno == 1364) {
@@ -31,7 +25,7 @@ class ProjetosController {
                     })
                 }
             }
-            return res.status(500).json({ erro: error.message})
+            return res.status(500).json({ erro: error })
         }
     }
 }
