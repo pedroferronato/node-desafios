@@ -11,7 +11,7 @@ class ProjetosController {
                 })
             }
             const projetoRegistrado = await database.Projetos.create(
-                projetoRecebido, 
+                projetoRecebido,
                 { include: [{ association: 'tasks' }] }
             ) // Realiza o registro de um novo projeto com suas tasks
 
@@ -25,6 +25,28 @@ class ProjetosController {
                     })
                 }
             }
+            return res.status(500).json({ erro: error })
+        }
+    }
+
+    static async selectAllProjetos(req, res) {
+        try {
+            const projetos = await database.Projetos.findAll(
+                {
+                    include: {
+                        association: 'tasks',
+                        attributes: [
+                            "title",
+                            "taskRelevance",
+                            "completed",
+                            "createdAt",
+                            "updatedAt"
+                        ]
+                    }
+                })
+
+            return res.json(projetos)
+        } catch (error) {
             return res.status(500).json({ erro: error })
         }
     }

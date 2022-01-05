@@ -5,7 +5,7 @@ const ProjetosController = require('./controllers/ProjetosController')
 
 const router = Router()
 
-router.get('/project', (req, res) => res.send({ msg: "Not implemented yet" }))
+router.get('/project', ProjetosController.selectAllProjetos)
     .get('/project/:id', (req, res) => res.send({ msg: "Not implemented yet" }))
     .post('/project', ProjetosController.insertProjeto)
     .put('/project/:id', (req, res) => res.send({ msg: "Not implemented yet" }))
