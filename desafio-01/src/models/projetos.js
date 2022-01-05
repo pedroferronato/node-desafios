@@ -1,4 +1,5 @@
 'use strict';
+const { v4: uuidv4 } = require('uuid')
 const {
   Model
 } = require('sequelize');
@@ -20,5 +21,6 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Projetos',
   });
+  Projetos.beforeCreate(projeto => projeto.id = uuidv4())
   return Projetos;
 };
