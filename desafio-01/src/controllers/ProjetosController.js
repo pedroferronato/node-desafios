@@ -45,9 +45,38 @@ class ProjetosController {
                     }
                 })
 
+            if (!projetos) return res.status(404).json({ erro: "Nenhum projeto encontrado" })
+
             return res.json(projetos)
         } catch (error) {
-            return res.status(500).json({ erro: error })
+            return res.status(500).json({ erro: error.message })
+        }
+    }
+
+    static async selectByIdProjeto(req, res) {
+        try {
+            const { id } = req.params
+            const projeto = await database.Projetos.findOne(
+                {
+                    where: { id : id },
+                    include: {
+                        association: 'tasks',
+                        attributes: [
+                            "title",
+                            "taskRelevance",
+                            "completed",
+                            "createdAt",
+                            "updatedAt"
+                        ]
+                    }
+                })
+
+            if (!projeto) return res.status(404).json({ erro: "Nenhum projeto encontrado" })
+
+            return res.json(projeto)
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ erro: error.message })
         }
     }
 }
