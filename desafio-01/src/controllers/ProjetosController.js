@@ -108,6 +108,29 @@ class ProjetosController {
             return res.status(500).json({ erro: error.message })
         }
     }
+
+    static async addTaskInProjeto(req, res) {
+        const { id } = req.params
+        const task = req.body
+        try {
+            const projeto = await database.Projetos.findOne({ where : { id : id } })
+            if (!projeto) return res.status(404).json({ erro : "Projeto não encontrado" })
+
+            const novaTask = await database.Tasks.create({...task, projeto_id : id})
+            
+            return res.status(201).json(novaTask)
+        } catch (error) {
+            if (error.parent) {
+                if (error.parent.errno == 1364) {
+                    return res.status(400).json({
+                        erro: error.message,
+                        mensagem: "Verifique o preenchimento dos campos obrigatórios"
+                    })
+                }
+            }
+            return res.status(500).json({ erro: error.message })
+        }
+    }
 }
 
 module.exports = ProjetosController
