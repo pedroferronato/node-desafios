@@ -91,6 +91,23 @@ class ProjetosController {
             return res.status(500).json({ erro: error.message })
         }
     }
+
+    // Atualiza somente os dados referentes à tabela projetos
+    static async updateProjetoById(req, res) {
+        const { id } = req.params
+        const projetoUpdate = req.body
+        try {
+            const projeto = await database.Projetos.findOne({ where : { id : id } })
+            if (!projeto) return res.status(404).json({ erro : "Projeto não encontrado" })
+
+            await database.Projetos.update(projetoUpdate, { where : { id : id } })
+            const projetoAtualizado = await database.Projetos.findOne({ where : { id : id} })
+
+            return res.json(projetoAtualizado)
+        } catch (error) {
+            return res.status(500).json({ erro: error.message })
+        }
+    }
 }
 
 module.exports = ProjetosController

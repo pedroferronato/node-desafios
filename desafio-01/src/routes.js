@@ -8,7 +8,7 @@ const router = Router()
 router.get('/project', ProjetosController.selectAllProjetos)
     .get('/project/:id', ProjetosController.selectByIdProjeto)
     .post('/project', ProjetosController.insertProjeto)
-    .put('/project/:id', (req, res) => res.send({ msg: "Not implemented yet" }))
+    .put('/project/:id', ProjetosController.updateProjetoById)
     .delete('/project/:id', ProjetosController.deleteProjetoById)
 
 module.exports = app => {
