@@ -13,7 +13,7 @@ router
     .delete('/project/:id', ProjetosController.deleteProjetoById) // Excluir projeto
     .post('/project/:id/task', ProjetosController.addTaskInProjeto) // Adiciona task a um projeto existente 
     .delete('/project/task/:taskId', ProjetosController.deleteTaskById) // Excluir task por id
-    .put('/project/:id/task/:taskId', (req, res) => console.log('Not implemented yet')) 
+    .put('/project/task/:taskId', ProjetosController.updateTaskById) // Atualizar task por id 
 
 module.exports = app => {
     app.use(bodyParser.json())

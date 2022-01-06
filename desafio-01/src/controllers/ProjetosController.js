@@ -144,6 +144,23 @@ class ProjetosController {
             return res.status(500).json({ erro: error.message })
         }
     }
+
+    static async updateTaskById(req, res) {
+        const { taskId } = req.params
+        const taskUpdate = req.body
+
+        try {
+            const task = await database.Tasks.findOne({ where : { id : taskId } })
+            if (!task) return res.status(404).json({ erro : "Task não encontrada" })
+
+            await database.Tasks.update(taskUpdate, { where : { id : taskId } })
+            const taskAtualizada = await database.Tasks.findOne({ where : { id : taskId} })
+
+            return res.json(taskAtualizada)
+        } catch (error) {
+            return res.status(500).json({ erro: error.message })
+        }
+    }
 }
 
 module.exports = ProjetosController
