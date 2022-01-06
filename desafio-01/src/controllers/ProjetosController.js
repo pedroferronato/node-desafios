@@ -131,6 +131,19 @@ class ProjetosController {
             return res.status(500).json({ erro: error.message })
         }
     }
+
+    static async deleteTaskById(req, res) {
+        const { taskId } = req.params
+        try {
+            const task = await database.Tasks.findOne({ where : { id : taskId } })
+            if (!task) return res.status(404).json({ erro : "Task não encontrada" })
+        
+            await database.Tasks.destroy({ where : { id : taskId} })
+            return res.status(204).json()
+        } catch (error) {
+            return res.status(500).json({ erro: error.message })
+        }
+    }
 }
 
 module.exports = ProjetosController
