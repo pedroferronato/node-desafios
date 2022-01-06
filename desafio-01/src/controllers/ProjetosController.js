@@ -31,19 +31,19 @@ class ProjetosController {
 
     static async selectAllProjetos(req, res) {
         try {
-            const projetos = await database.Projetos.findAll(
-                {
-                    include: {
-                        association: 'tasks',
-                        attributes: [
-                            "title",
-                            "taskRelevance",
-                            "completed",
-                            "createdAt",
-                            "updatedAt"
-                        ]
-                    }
-                })
+            const projetos = await database.Projetos.findAll({
+                include: {
+                    association: 'tasks',
+                    attributes: [
+                        "id",
+                        "title",
+                        "taskRelevance",
+                        "completed",
+                        "createdAt",
+                        "updatedAt"
+                    ]
+                }
+            })
 
             if (!projetos) return res.status(404).json({ erro: "Nenhum projeto encontrado" })
 
@@ -56,26 +56,38 @@ class ProjetosController {
     static async selectByIdProjeto(req, res) {
         try {
             const { id } = req.params
-            const projeto = await database.Projetos.findOne(
-                {
-                    where: { id : id },
-                    include: {
-                        association: 'tasks',
-                        attributes: [
-                            "title",
-                            "taskRelevance",
-                            "completed",
-                            "createdAt",
-                            "updatedAt"
-                        ]
-                    }
-                })
+            const projeto = await database.Projetos.findOne({
+                where: { id: id },
+                include: {
+                    association: 'tasks',
+                    attributes: [
+                        "id",
+                        "title",
+                        "taskRelevance",
+                        "completed",
+                        "createdAt",
+                        "updatedAt"
+                    ]
+                }
+            })
 
             if (!projeto) return res.status(404).json({ erro: "Nenhum projeto encontrado" })
 
             return res.json(projeto)
         } catch (error) {
-            console.log(error);
+            return res.status(500).json({ erro: error.message })
+        }
+    }
+
+    static async deleteProjetoById(req, res) {
+        const { id } = req.params
+        try {
+            const projeto = await database.Projetos.findOne({ where : { id : id } })
+            if (!projeto) return res.status(404).json({ erro : "Projeto não encontrado" })
+
+            await database.Projetos.destroy({ where : { id : id } })
+            return res.status(204).json()
+        } catch (error) {
             return res.status(500).json({ erro: error.message })
         }
     }

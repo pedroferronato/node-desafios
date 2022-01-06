@@ -26,7 +26,9 @@ module.exports = {
         references: {
           model: 'Projetos',
           key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
