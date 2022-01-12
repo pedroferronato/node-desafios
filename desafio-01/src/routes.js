@@ -1,9 +1,8 @@
-const bodyParser = require('body-parser')
-const { Router } = require('express')
+const express = require('express')
 
 const ProjetosController = require('./controllers/ProjetosController')
 
-const router = Router()
+const router = express.Router()
 
 router
     .get('/project', ProjetosController.selectAllProjetos) // Buscar todos os projetos
@@ -16,7 +15,7 @@ router
     .put('/project/task/:taskId', ProjetosController.updateTaskById) // Atualizar task por id 
 
 module.exports = app => {
-    app.use(bodyParser.json())
+    app.use(express.json())
 
     app.use('/api', router)
 }
